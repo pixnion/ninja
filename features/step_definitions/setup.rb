@@ -136,3 +136,10 @@ Given /^I have an (.*) user group with all rights$/ do |group|
 	])
 	page.driver.headers = {'X-op5-mock' => @mock.file}
 end
+
+When /^(.*) waiting until completed$/ do |action|
+  using_wait_time(60) do
+    step action
+  end
+end
+
