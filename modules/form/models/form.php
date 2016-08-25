@@ -18,15 +18,20 @@ class Form_Model {
 	 * Create a form with a given set of fields
 	 *
 	 * @param $action string
-	 * @param $fields array of From_Field_Model
+	 * @param $renderable_children array of From_Field_Model|Form_Button_Model
 	 */
-	public function __construct($action, array $fields = array()) {
+	public function __construct($action, array $renderable_children = array()) {
 		static $index = 0;
 		$index++;
 		$this->action = $action;
 		$this->id = 'nj-form-' . uniqid() . '-' . $index;
-		foreach ( $fields as $field ) {
-			$this->add_field( $field );
+		foreach ($renderable_children as $child_node) {
+			// TODO test this new interface, that allows adding form buttons
+			if($child_node instanceof Form_Button_Model) {
+				$this->add_button($child_node);
+			} else {
+				$this->add_field($child_node);
+			}
 		}
 	}
 	/**

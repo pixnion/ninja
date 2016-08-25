@@ -209,16 +209,32 @@ class Tac_Controller extends Ninja_Controller {
 
 		$menu->set("Dashboard options.Rename this dashboard",
 			LinkProvider::factory()->get_url('tac', 'rename_dashboard_dialog', array('dashboard_id'=> $dashboard->get_id())),
-			30, null, array(
-			'class' => "menuitem_dashboard_option"
-		));
+			30,
+			null,
+			array(
+				'class' => "menuitem_dashboard_option"
+			)
+		);
+
+		$menu->set("Dashboard options.Share this dashboard",
+			LinkProvider::factory()->get_url('tac', 'share_dashboard', array('dashboard_id'=> $dashboard->get_id())),
+			21,
+			null,
+			array(
+				'class' => "menuitem_dashboard_option"
+			)
+		);
+
 
 		if (!dashboard::is_login_dashboard($dashboard)) {
 			$menu->set("Dashboard options.Set as login dashboard",
 				LinkProvider::factory()->get_url('tac', 'login_dashboard_dialog', array('dashboard_id'=> $dashboard->get_id())),
-				25, null, array(
+				25,
+				null,
+				array(
 					'class' => "menuitem_dashboard_option"
-				));
+				)
+			);
 		}
 
 		$menu->set("Dashboard options.Delete this dashboard", LinkProvider::factory()->get_url('tac', 'delete_dashboard_dialog', array('dashboard_id' => $dashboard->get_id())), 31, null, array(
@@ -283,9 +299,13 @@ class Tac_Controller extends Ninja_Controller {
 	 * So we don't need to render it on every page, fancybox can load the dialog from an URL
 	 */
 	public function rename_dashboard_dialog() {
-
 		$dashboard_id = $this->input->get('dashboard_id');
 		$dashboard = DashboardPool_Model::fetch_by_key($dashboard_id);
+
+		if(!$dashboard) {
+			$this->template = json::fail_view("No dashboard found with the id '$dashboard_id'.");
+			return;
+		}
 
 		$form = new Form_Model(
 			LinkProvider::factory()->get_url('tac', 'rename_dashboard'),
@@ -303,6 +323,132 @@ class Tac_Controller extends Ninja_Controller {
 		$form->add_button(new Form_Button_Confirm_Model('save', 'Save'));
 		$form->add_button(new Form_Button_Cancel_Model('cancel', 'Cancel'));
 		$this->template = $form->get_view();
+	}
+
+	/**
+	 * Render the share dashboard dialog, as an entire page
+	 *
+	 * So we don't need to render it on every page, fancybox can load the dialog from an URL
+	 */
+	public function share_dashboard() {
+		// TODO check if current user is allowed to share a dashboard
+		if($_POST) {
+			$dashboard_id = $this->input->post('dashboard_id');
+			$dashboard = DashboardPool_Model::fetch_by_key($dashboard_id);
+			if(!$dashboard) {
+				$this->template = json::fail_view("No dashboard found with the id '$dashboard_id'.");
+				return;
+			}
+
+			$entity_type = $this->input->post('group_or_user');
+			if(!in_array($entity_type, array('group', 'user'), true)) {
+				$this->template = json::fail_view("Bad value for 'group_or_user'.");
+				return;
+			}
+
+			$entity_name = $this->input->post($entity_type);
+			if(!$entity_type) {
+				$this->template = json::fail_view("Missing ".
+					"value for who to share to, check ".
+					"your input");
+				return;
+			}
+
+			$dashboard->share_with($entity_type, $entity_name['value']);
+			$dashboard->save();
+			$this->template = json::ok_view(sprintf("Shared the dashboard '%s' with the %s %s.",
+				$dashboard->get_name(),
+				$entity_type,
+				$entity_name['value']
+			));
+			return;
+		}
+
+		$dashboard_id = $this->input->get('dashboard_id');
+		$dashboard = DashboardPool_Model::fetch_by_key($dashboard_id);
+
+		if(!$dashboard) {
+			$this->template = json::fail_view("No dashboard found with the id '$dashboard_id'");
+			return;
+		}
+
+		$share_form = new Form_Model(
+			LinkProvider::factory()->get_url('tac', 'share_dashboard'),
+			array(
+				new Form_Field_Hidden_Model('dashboard_id'),
+				new Form_Field_Option_Model(
+					'group_or_user',
+					'Group or user',
+					array(
+						'group' => 'Group',
+						'user' => 'User'
+					),
+					'select'
+				),
+				new Form_Field_Conditional_Model(
+					'group_or_user',
+					'group',
+					new Form_Field_ORMObject_Model(
+						'group',
+						'Group',
+						array(
+							'usergroups'
+						)
+					)
+				),
+				new Form_Field_Conditional_Model(
+					'group_or_user',
+					'user',
+					new Form_Field_ORMObject_Model(
+						'user',
+						'User',
+						array(
+							'users'
+						)
+					)
+				),
+			)
+		);
+
+		$share_form->set_values(array(
+			'dashboard_id' => $dashboard->get_id(),
+		));
+
+		// TODO make sure the lightbox doesn't twitch when pressing the
+		// arrow in an autocomplete field
+		$share_form->add_button(new Form_Button_Confirm_Model('share', 'Share'));
+
+		$listing = new View('share_dashboard_listing');
+		$listing->shared_to = $dashboard->get_shared_with();
+
+		$outer_form = new Form_Model('#', array(
+			new Form_Button_Cancel_Model('close', 'Close')
+		));
+		$this->template = new View('concat');
+		$this->template->views = array(
+			$share_form->get_view(),
+			$listing,
+			$outer_form->get_view(),
+		);
+	}
+
+	public function unshare_dashboard() {
+		// no need to check for permissions here, if the user could
+		// once share dashboards, we want them to still be able to
+		// unshare it.. right?
+		if(!$_POST) {
+			$this->template = json::fail_view("You should not visit this URL in your browser.");
+			return;
+		}
+		// TODO implement this stuff
+	}
+
+	public function dashboard_is_shared_with() {
+		if($_POST) {
+			$this->template = json::fail_view("You should not POST to this URL.");
+			return;
+		}
+		// TODO do stuff here
 	}
 
 	/**

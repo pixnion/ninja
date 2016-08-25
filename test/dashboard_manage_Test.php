@@ -24,10 +24,12 @@ class Dashboard_Manage_Test extends PHPUnit_Framework_TestCase {
 
 		Auth::instance(array('session_key' => false))
 			->force_user($superuser);
+		$_POST = array();
 	}
 
 	protected function tearDown() {
 		op5objstore::instance()->mock_clear();
+		$_POST = array();
 	}
 
 	private function mock_data($tables) {

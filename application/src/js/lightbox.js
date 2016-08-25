@@ -254,17 +254,23 @@ Lightbox.ajax_form_from_href = function (title_text, source) {
 			var fragment = document.createElement('div');
 			fragment.innerHTML = data;
 
-			var form = fragment.querySelector('form');
-			var buttons = form.querySelector('.nj-form-buttons');
-
-			if (buttons) {
-				form.removeChild(buttons);
-				lightbox.footer(buttons);
+			var forms = fragment.querySelectorAll('form');
+			var buttons;
+			for(var i = 0; i < forms.length; i++) {
+				if(i == forms.length - 1) {
+					// the last form is by convention the
+					// one with the buttons that we will
+					// place in the lightbox's footer
+					button_fieldset = forms[i].querySelector('.nj-form-buttons');
+					if(button_fieldset) {
+						forms[i].removeChild(button_fieldset);
+						lightbox.footer(button_fieldset);
+					}
+				}
+				FormModule.add_form($(forms[i]));
 			}
 
 			lightbox.content(fragment.childNodes);
-			FormModule.add_form($(form));
-
 			lightbox.loading(false);
 			lightbox.show();
 
