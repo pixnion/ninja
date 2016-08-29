@@ -211,6 +211,62 @@ $(document).on('click', '.menuitem_dashboard_option', function (e) {
 
 });
 
+$(document).on("submit", ".nj-form[action$='/tac/share_dashboard']", function(ev) {
+	var form = $(this);
+	var form_data = form.serialize();
+	var ul_parent = $(this).parents("form").parent();
+	var placeholder_text = ul_parent.find("shared_with_placeholder");
+	var ul = find(".shared_with_these_entities");
+	$.post(_site_domain+_index_page+"/tac/share_dashboard", form_data)
+		.done(function(data) {
+			var msg = data.result;
+			Notify.message(msg, {"type": "success"});
+			var group_or_user = form.find("select[name='group_or_user']").val();
+			var name = form.find("input[name='"+group_or_user+"[value]']").val();
+			$(".shared_with_these_entities")
+				.append($("<li>")
+					.append($("<span>").text(name))
+					.append($("<a>")
+						.text("X")
+						.addClass("unshare_dashboard")
+						.attr("href", _site_domain+_index_page+"/tac/unshare_dashboard")
+						.attr("data-dashboard_id", form.find("input[name='dashboard_id']").val())
+						.attr("data-group_or_user", group_or_user)
+						.attr("data-name", name)
+					)
+			       );
+			placeholder_text.hide();
+		})
+		.fail(function(data) {
+			var msg = JSON.parse(data.responseText).result;
+			Notify.message(msg, {"type": "error"});
+		});
+	ev.preventDefault();
+	return false;
+});
+
+$(document).on("click", ".unshare_dashboard", function(ev) {
+	var a = $(this);
+	tac_send_request("unshare_dashboard", a.data(), {
+		"success": function(data) {
+			var msg = data.result;
+			Notify.message(msg, {"type": "success"});
+			var ul = a.parents("ul");
+			if(ul.find("li").length === 1) {
+				// we're removing the last of the list items
+				ul.parent().find('.shared_with_placeholder').show();
+			}
+			a.parents("li").remove();
+		},
+		"error": function(data) {
+			var msg = data.result;
+			Notify.message(msg, {"type": "error"});
+		}
+	});
+	ev.preventDefault();
+	return false;
+});
+
 /**
  * Ninja widget class
  */

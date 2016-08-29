@@ -48,7 +48,7 @@ class dashboard {
 	 * @param $dashboard Dashboard_Model
 	 * @return bool
 	 */
-	public function is_login_dashboard (Dashboard_Model $dashboard) {
+	public static function is_login_dashboard (Dashboard_Model $dashboard) {
 
 		$login_dashboard = SettingPool_Model::all()
 			->reduce_by('username', op5auth::instance()->get_user()->get_username(), '=')

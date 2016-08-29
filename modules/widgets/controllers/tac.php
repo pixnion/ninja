@@ -347,7 +347,7 @@ class Tac_Controller extends Ninja_Controller {
 			}
 
 			$entity_name = $this->input->post($entity_type);
-			if(!$entity_type) {
+			if(!$entity_name || !$entity_name['value']) {
 				$this->template = json::fail_view("Missing ".
 					"value for who to share to, check ".
 					"your input");
@@ -420,6 +420,7 @@ class Tac_Controller extends Ninja_Controller {
 
 		$listing = new View('share_dashboard_listing');
 		$listing->shared_to = $dashboard->get_shared_with();
+		$listing->dashboard_id = $dashboard->get_id();
 
 		$outer_form = new Form_Model('#', array(
 			new Form_Button_Cancel_Model('close', 'Close')
@@ -432,6 +433,10 @@ class Tac_Controller extends Ninja_Controller {
 		);
 	}
 
+	/**
+	 * Remove read rights for a user that was given read rights by the
+	 * logged in user.
+	 */
 	public function unshare_dashboard() {
 		// no need to check for permissions here, if the user could
 		// once share dashboards, we want them to still be able to
@@ -440,15 +445,36 @@ class Tac_Controller extends Ninja_Controller {
 			$this->template = json::fail_view("You should not visit this URL in your browser.");
 			return;
 		}
-		// TODO implement this stuff
-	}
 
-	public function dashboard_is_shared_with() {
-		if($_POST) {
-			$this->template = json::fail_view("You should not POST to this URL.");
+		$dashboard_id = $this->input->post('dashboard_id');
+		$dashboard = DashboardPool_Model::fetch_by_key($dashboard_id);
+		if(!$dashboard) {
+			$this->template = json::fail_view("No dashboard found with the id '$dashboard_id'.");
 			return;
 		}
-		// TODO do stuff here
+
+		$entity_type = $this->input->post('group_or_user');
+		if(!in_array($entity_type, array('group', 'user'), true)) {
+			$this->template = json::fail_view("Bad value for 'group_or_user': $entity_type.");
+			return;
+		}
+
+		$entity_name = $this->input->post('name');
+		if(!$entity_name) {
+			$this->template = json::fail_view("Missing ".
+				"value for who to share to, check ".
+				"your input");
+			return;
+		}
+
+		$dashboard->unshare_with($entity_type, $entity_name['value']);
+		$dashboard->save();
+		$this->template = json::ok_view(sprintf("Unshared the dashboard '%s' from the %s %s.",
+			$dashboard->get_name(),
+			$entity_type,
+			$entity_name['value']
+		));
+		return;
 	}
 
 	/**
