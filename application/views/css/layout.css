@@ -1683,7 +1683,7 @@ ul.linklist li a:after {
   vertical-align: 5%;
 }
 
-ul.shared_with_these_entities {
+ul.shared_with_these_entities, p.shared_with_placeholder {
 	margin: 5px 10px;
 }
 
