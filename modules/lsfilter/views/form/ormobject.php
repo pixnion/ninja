@@ -10,10 +10,15 @@ echo '<label>';
 echo '<div class="nj-form-label">' . html::specialchars($field->get_pretty_name()) . '</div>';
 echo '<div class="nj-form-field-autocomplete" data-autocomplete="' . implode(',', $tables) . '">';
 
-$first = $tables[count($tables) - 1];
+$first = rtrim($tables[count($tables) - 1], 's');
 $types = $first;
 if(count($tables) > 1) {
-	$types = implode(', ', $tables);
+	$types = implode(', ',
+		array_map(function($t) {
+			return rtrim($t, 's');
+		},
+		$tables)
+	);
 	$types .= ' or ' . $first;
 }
 

@@ -376,6 +376,7 @@ class Tac_Controller extends Ninja_Controller {
 			LinkProvider::factory()->get_url('tac', 'share_dashboard'),
 			array(
 				new Form_Field_Hidden_Model('dashboard_id'),
+				new Form_Field_HtmlDecorator_Model('<h2>Share with (read only):</h2>'),
 				new Form_Field_Option_Model(
 					'group_or_user',
 					'Group or user',
@@ -467,7 +468,7 @@ class Tac_Controller extends Ninja_Controller {
 			return;
 		}
 
-		$dashboard->unshare_with($entity_type, $entity_name['value']);
+		$dashboard->unshare_with($entity_type, $entity_name);
 		$dashboard->save();
 		$this->template = json::ok_view(sprintf("Unshared the dashboard '%s' from the %s %s.",
 			$dashboard->get_name(),

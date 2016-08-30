@@ -12,7 +12,7 @@ $manifest = array_merge_recursive($manifest, array(
 	"users" => array(
 		array(
 			'display_column' => 'name',
-			'query' => '[users] name ~~ "%s"'
+			'query' => '[users] username ~~ "%s"'
 		)
 	),
 ));

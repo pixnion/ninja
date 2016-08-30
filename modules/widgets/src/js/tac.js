@@ -213,11 +213,7 @@ $(document).on('click', '.menuitem_dashboard_option', function (e) {
 
 $(document).on("submit", ".nj-form[action$='/tac/share_dashboard']", function(ev) {
 	var form = $(this);
-	var form_data = form.serialize();
-	var ul_parent = $(this).parents("form").parent();
-	var placeholder_text = ul_parent.find("shared_with_placeholder");
-	var ul = find(".shared_with_these_entities");
-	$.post(_site_domain+_index_page+"/tac/share_dashboard", form_data)
+	$.post(_site_domain+_index_page+"/tac/share_dashboard", form.serialize())
 		.done(function(data) {
 			var msg = data.result;
 			Notify.message(msg, {"type": "success"});
@@ -225,17 +221,18 @@ $(document).on("submit", ".nj-form[action$='/tac/share_dashboard']", function(ev
 			var name = form.find("input[name='"+group_or_user+"[value]']").val();
 			$(".shared_with_these_entities")
 				.append($("<li>")
-					.append($("<span>").text(name))
+					.append($("<span>").text(name + "(" + group_or_user + ")"))
 					.append($("<a>")
-						.text("X")
 						.addClass("unshare_dashboard")
 						.attr("href", _site_domain+_index_page+"/tac/unshare_dashboard")
+						.attr("title", "Remove access for "+name)
 						.attr("data-dashboard_id", form.find("input[name='dashboard_id']").val())
 						.attr("data-group_or_user", group_or_user)
 						.attr("data-name", name)
+						.append(icon16('delete'))
 					)
 			       );
-			placeholder_text.hide();
+			form.siblings(".shared_with_placeholder").hide();
 		})
 		.fail(function(data) {
 			var msg = JSON.parse(data.responseText).result;
