@@ -74,7 +74,7 @@ run_sql_file () # (db_login_opts, sql_script_path)
 	db_login_opts=$1
 	sql_script_path=$2
 
-	mysql $db_login_opts < $sql_script_path >/dev/null 2>/dev/null
+	mysql $db_login_opts < $sql_script_path
 }
 
 if [ "$db_pass" != "" ]
