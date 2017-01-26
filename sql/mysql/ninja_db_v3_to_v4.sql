@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS ninja_saved_searches (
 	search_description TEXT NOT NULL,
 	PRIMARY KEY (id),
 	KEY username (username)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;

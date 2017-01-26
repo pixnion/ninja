@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `avail_config` (
   `updated` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   KEY `user` (`user`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS avail_config_objects (
   id int(11) NOT NULL auto_increment,
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS avail_config_objects (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY  (id),
   KEY avail_id (avail_id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS avail_db_version (
   version int(11) NOT NULL default '0'
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 INSERT INTO avail_db_version VALUES(1);

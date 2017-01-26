@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `description` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_name` (`name`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 --
 -- Data for table `roles`
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `roles_users` (
   `role_id` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`user_id`,`role_id`),
   KEY `fk_role_id` (`role_id`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_login` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_username` (`username`)
-) COLLATE latin1_general_cs;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 
 --
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `user_tokens` (
   PRIMARY KEY  (id),
   UNIQUE KEY uniq_token (token),
   KEY fk_user_id (user_id)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `ninja_settings`
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `ninja_settings` (
   KEY `username` (`username`),
   KEY `page` (`page`),
   KEY `widget_id` (`widget_id`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `ninja_settings` (`page`, `type`, `setting`)
  VALUES('tac/index', 'widget_order', 'widget-placeholder=widget-netw_outages,widget-tac_scheduled,widget-monitoring_performance|widget-placeholder1=widget-tac_disabled,widget-tac_acknowledged|widget-placeholder2=widget-netw_health,widget-geomap|widget-placeholder3=widget-tac_hosts,widget-tac_services,widget-tac_monfeat,widget-tac_problems');
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `ninja_widgets` (
   `setting` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `username` (`username`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 --
 -- Data for table `ninja_widgets`
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `ninja_db_version` (
   `id` int(11) NOT NULL auto_increment,
   `version` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 --
 -- Data for table `ninja_db_version`
@@ -174,4 +174,4 @@ CREATE TABLE IF NOT EXISTS `ninja_user_authorization` (
   `all_host_commands` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `user_id` (`user_id`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;

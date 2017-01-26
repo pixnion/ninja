@@ -11,4 +11,4 @@ CREATE TABLE recurring_downtime_objects (
 	recurring_downtime_id int(11) NOT NULL,
 	object_name VARCHAR(255),
 	FOREIGN KEY (recurring_downtime_id) REFERENCES recurring_downtime(id)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;

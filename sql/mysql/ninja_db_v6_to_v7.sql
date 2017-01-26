@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS ninja_saved_queries (
 	INDEX (query_table,username),
 	INDEX (query_name),
 	UNIQUE (username,query_name)
-) COLLATE latin1_general_cs ENGINE=InnoDB;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;

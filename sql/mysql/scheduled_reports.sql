@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `scheduled_reports` (
   PRIMARY KEY  (`id`),
   KEY `report_type_id` (`report_type_id`),
   KEY `user` (`user`)
-) COLLATE latin1_general_cs;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `scheduled_report_types` (
   `id` int(11) NOT NULL auto_increment,
@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS `scheduled_report_types` (
   `identifier` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `identifier` (`identifier`)
-) COLLATE latin1_general_cs;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 
 CREATE TABLE IF NOT EXISTS scheduled_reports_db_version (
   version varchar(10) NOT NULL
-) COLLATE latin1_general_cs;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 INSERT INTO scheduled_reports_db_version VALUES('5');
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `scheduled_report_periods` (
   `id` int(11) NOT NULL auto_increment,
   `periodname` varchar(100) NOT NULL,
   PRIMARY KEY  (`id`)
-) COLLATE latin1_general_cs;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `scheduled_report_periods` (`id`, `periodname`) VALUES
 (1, 'Weekly'),

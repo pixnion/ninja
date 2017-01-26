@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `dashboards` (
 	`layout` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`),
 	KEY `username` (`username`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `dashboard_widgets`;
 CREATE TABLE IF NOT EXISTS `dashboard_widgets` (
@@ -17,4 +17,4 @@ CREATE TABLE IF NOT EXISTS `dashboard_widgets` (
   `setting` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `dashboard_id` (`dashboard_id`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;

@@ -21,7 +21,7 @@ CREATE TABLE sla_config (
   includesoftstates int(11) NOT NULL default '0',
   updated timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE sla_config_objects (
   id int(11) NOT NULL auto_increment,
@@ -29,7 +29,7 @@ CREATE TABLE sla_config_objects (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY  (id),
   KEY sla_id (sla_id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE sla_periods (
   id int(11) NOT NULL auto_increment,
@@ -38,9 +38,9 @@ CREATE TABLE sla_periods (
   `value` float NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY sla_id (sla_id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE sla_db_version (
   version int(11) NOT NULL default '0'
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 INSERT INTO sla_db_version VALUES(1);

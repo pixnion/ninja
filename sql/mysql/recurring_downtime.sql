@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS recurring_downtime (
  PRIMARY KEY  (id),
  KEY author (author),
  KEY downtime_type (downtime_type)
-) COLLATE latin1_general_cs;
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;

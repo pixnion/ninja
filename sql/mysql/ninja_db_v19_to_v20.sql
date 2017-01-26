@@ -4,4 +4,4 @@ CREATE TABLE `permission_quarks` (
   `name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `type` (`type`,`name`)
-);
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
