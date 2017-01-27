@@ -146,7 +146,9 @@ class User_Model extends BaseUser_Model implements op5MayI_Actor {
 
 	public function set_password($value) {
 		if (strlen($value) > 0) {
-			parent::set_password(crypt($value));
+			$salt = base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM));
+			$salt = '$6$' . substr($salt, 0, 16);
+			parent::set_password(crypt($value, $salt));
 		}
 		/* TODO: Which hashing algorithm? crypt is the only simple one
 		 * available which has salt... */
